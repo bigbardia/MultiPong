@@ -1,0 +1,111 @@
+body {
+    font-family: 'Courier New', Courier, monospace , sans-serif;
+    background-color: black;
+    color: white;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+h1,
+h3 {
+    color: white;
+}
+
+.account-btn {
+    float: right;
+    margin-right: 40px;
+    margin-top: 10px;
+    text-transform: capitalize;
+    padding: 4px;
+    background-color: white;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+
+}
+
+.submit-btn {
+    
+    border-radius: 5px;
+    text-transform: capitalize;
+    background: white;
+
+}
+
+.account-btn:hover {
+
+    box-shadow: 0px 1px 0px 1px  yellow;
+}
+
+.account-btn:active {
+    box-shadow: 0px 0px black;
+}
+
+.title {
+    text-align: center;
+}
+
+
+
+.container {
+    display: flex;
+    float: right;
+    margin-right: 20px;
+    flex-direction: column;
+    border: yellow solid;
+    
+
+}
+
+.container-item {
+    margin: 5px;
+    padding: 1px;
+}
+
+
+.other-btn {
+    float: right;
+    background-color:steelblue;
+    border: none;
+    color: yellow;
+    font-size: large;
+    
+}
+
+.other-btn:hover {
+    box-shadow: 0px 0px 0px 1px orange;
+}
+.other-btn:active {
+    box-shadow: 0px 0px 0px 0px orange;
+}
+
+.error {
+    color: red;   
+}
+
+
+.logout-btn {
+    float: left;
+    margin-right: 40px;
+    margin-top: 10px;
+    text-transform: capitalize;
+    padding: 4px;
+    background-color: white;
+    outline: none;
+    border: none;
+    border-radius: 5px;    
+}
+
+
+
+.logout-btn:hover {
+
+    box-shadow: 0px 1px 0px 1px  yellow;
+}
+
+.logout-btn:active {
+    box-shadow: 0px 0px black;
+}
