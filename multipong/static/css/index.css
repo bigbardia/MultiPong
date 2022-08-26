@@ -51,7 +51,7 @@ h3 {
 
 
 .container {
-    display: flex;
+    display: none;
     float: right;
     margin-right: 20px;
     flex-direction: column;
@@ -108,4 +108,60 @@ h3 {
 
 .logout-btn:active {
     box-shadow: 0px 0px black;
+}
+
+
+
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    bottom: 10px;
+    background-color: white;
+    color: black;
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    height: 200px;
+    overflow-y:scroll;
+    box-shadow: 0px 0px 5px 5px white;
+
+}
+
+.chat-item { 
+    color : black;
+    width: 500px;
+}
+
+.main-text {
+    text-align: center;
+    
+}
+
+
+.chat-box {
+    float: right;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border: solid;
+
+}
+
+.chat {
+    margin-left: 10px;
+    word-wrap: break-word;
+}
+
+.announcement {
+    color: red;
+    text-align: center;
+}
+
+.login-required {
+    color: red;   
+    float: right;
+    position: absolute;
+    right: 20px;
+    bottom: 210px;
+
 }

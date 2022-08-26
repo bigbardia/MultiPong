@@ -33,6 +33,7 @@ def create_app():
     sess.init_app(app)
     csrf.init_app(app)
     socketio.init_app(app)
+    from multipong import chat
 
     app.jinja_env.globals.update(is_authenticated = is_authenticated)
 

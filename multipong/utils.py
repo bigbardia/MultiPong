@@ -8,3 +8,6 @@ def is_authenticated()->bool:
         return False
     return True
 
+def get_current_user():
+    user = User.query.get(session["_id"])
+    return user

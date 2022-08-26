@@ -7,6 +7,8 @@ from flask import (
 )
 
 from multipong.models import User , db
+from multipong.ext import socketio
+from multipong.utils import get_current_user, is_authenticated
 
 
 auth = Blueprint("auth" , __name__)
@@ -94,7 +96,14 @@ def logout():
     session.permanent = True
     return redirect("/")
 
+@auth.route("/get_username")
+def get_username():
+    if is_authenticated():
+        user = get_current_user()
+        return user.username
+
 
 @auth.route("/test")
 def test():
     return f"{session.items()}"
+

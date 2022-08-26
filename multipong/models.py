@@ -25,19 +25,11 @@ class User(db.Model):
     def __repr__(self):
         return self.username
 
-class PublicChat(db.Model):
+# class PublicChat(db.Model):
 
-    _id = db.Column(db.Integer, primary_key = True)
-    text = db.Column(db.Text , nullable = False)
+#     _id = db.Column(db.Integer, primary_key = True)
+#     text = db.Column(db.Text , nullable = False)
+#     timestamp = db.Column(db.Integer, nullable= False , default = "")
 
-
-
-class Room(db.Model):
-
-    _id = db.Column(db.Integer, primary_key = True)
-    public_id = db.Column(db.String(6), default = uuid4().hex[:6])
-
-
-    def __repr__(self):
-        return self.public_id
-
+#     def __init__(self ,text):
+#         self.text = text

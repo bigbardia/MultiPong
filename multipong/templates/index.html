@@ -2,7 +2,7 @@
 
 {% block head %}
     <link  rel="stylesheet" href="/static/css/index.css">
-    <script defer src="/static/js/index.js"></script>
+    
     <title>
         MultiPONG
     </title>
@@ -62,9 +62,39 @@
         </div>
 
     </div>
+
+    {% if not is_authenticated() %}
+        <p  class="login-required">
+            login required to chat
+        </p>
+    {% endif %}
+
+    <div  class="chat-container" id="chat-container" >
+        <h3 class="chat-item main-text">
+            Public Chat
+        </h3>
+
+        <div class="chat-item" id="chat-area">
+            <!-- <div class="chat">
+
+                <p>
+                    <b>
+                        User : 
+                    </b>
+                </p>
+
+            </div> -->
+        </div>
+        
+        <div class="chat-item">
+            <input type="text" name="chat" class="chat-box" id="chat-box"/>
+        </div>
+    </div>
     
 
-    
 
 
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" ></script>
+    <script  src="/static/js/index.js"></script>
+    <script  src="/static/js/chat.js"></script>
 {% endblock %}
