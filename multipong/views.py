@@ -1,9 +1,15 @@
 from flask import Blueprint , render_template
+from multipong.models import PublicChat
 
 views = Blueprint("views" , __name__ , template_folder="templates" , static_folder="static")
 
 
 @views.route("/")
 def index():
-    return render_template("index.html")
+    context = {
+        "chats" : PublicChat.query.all()[-10:]
+    }
+    return render_template("index.html" , **context)
+
+
 

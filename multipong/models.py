@@ -1,6 +1,9 @@
 from multipong.ext import db
-from uuid import uuid4
 from passlib.hash import bcrypt
+from time import time
+
+def gen_timestamp():
+    return int(time())
 
 
 class User(db.Model):
@@ -9,7 +12,7 @@ class User(db.Model):
     username = db.Column(db.String(20) , unique = True)
     password = db.Column(db.Text)
     score = db.Column(db.Integer , nullable = False , default = 0)
-    # public_chats = db.relationship()
+    public_chats = db.relationship("PublicChat" , backref =  "user")
 
     def __init__(self , username , password ):
         self.username = username
@@ -25,11 +28,16 @@ class User(db.Model):
     def __repr__(self):
         return self.username
 
-# class PublicChat(db.Model):
+class PublicChat(db.Model):
 
-#     _id = db.Column(db.Integer, primary_key = True)
-#     text = db.Column(db.Text , nullable = False)
-#     timestamp = db.Column(db.Integer, nullable= False , default = "")
+    _id = db.Column(db.Integer, primary_key = True)
+    text = db.Column(db.Text , nullable = False)
+    timestamp = db.Column(db.Integer, nullable= False , default = gen_timestamp)
+    user_id = db.Column(db.Integer , db.ForeignKey("user._id"))
 
-#     def __init__(self ,text):
-#         self.text = text
+    def __init__(self ,text , user):
+        self.text = text
+        self.user = user
+
+    def __repr__(self):
+        return self.text    

@@ -75,15 +75,18 @@
         </h3>
 
         <div class="chat-item" id="chat-area">
-            <!-- <div class="chat">
+            {% for chat in chats %}
+            <div class="chat">
 
                 <p>
                     <b>
-                        User : 
+                        {{chat.user.username}} : 
                     </b>
+                    {{chat.text}}
                 </p>
 
-            </div> -->
+            </div>
+            {% endfor %}
         </div>
         
         <div class="chat-item">

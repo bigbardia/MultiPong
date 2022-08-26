@@ -29,6 +29,7 @@ socketio.on("user_joined_chat" , msg =>{
 
 
 socketio.on("user_left_chat", msg =>{
+    console.log(1);
     addAnouncement(msg);
 })
 
@@ -45,7 +46,6 @@ socketio.on("public_chat", data => {
     b.innerText = username + " : "
 
     if (username === USERNAME){
-        console.log(1);
         b.style.color = "red";
     }
     
