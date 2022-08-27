@@ -60,7 +60,6 @@
 
         <div class="container-item" id="errors">
         </div>
-
     </div>
 
     {% if not is_authenticated() %}
@@ -77,26 +76,20 @@
         <div class="chat-item" id="chat-area">
             {% for chat in chats %}
             <div class="chat">
-                
                 <p> 
-                    
                     <b>
                         {{chat.user.username}} : 
                     </b>
                     {{chat.text}} <small style="color: gray;" >{{to_datetime(chat.timestamp)}}</small>
                 </p>
-
             </div>
             {% endfor %}
         </div>
-        
         <div class="chat-item">
             <input type="text" name="chat" class="chat-box" id="chat-box"/>
         </div>
     </div>
     
-
-
 
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" ></script>
     <script  src="/static/js/index.js"></script>
