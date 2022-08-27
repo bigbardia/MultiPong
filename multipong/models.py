@@ -2,7 +2,7 @@ from multipong.ext import db
 from passlib.hash import bcrypt
 from time import time
 from uuid import uuid4
-import asyncio
+
 
 def gen_timestamp():
     return int(time())
