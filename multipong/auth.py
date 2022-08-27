@@ -90,7 +90,7 @@ def login():
     return jsonify({"error":"failed"})
 
 
-@auth.route("/logout")
+@auth.route("/logout" , methods = ["GET"])
 def logout():
     session.clear()
     session.permanent = True
@@ -101,6 +101,7 @@ def get_username():
     if is_authenticated():
         user = get_current_user()
         return user.username
+    return ""
 
 
 @auth.route("/test")
