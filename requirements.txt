@@ -7,3 +7,4 @@ Flask-WTF==1.0.1
 passlib==1.7.4
 PyMySQL==1.0.2
 mysql-connector-python==8.0.30
+pytz==2022.1

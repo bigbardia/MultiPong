@@ -37,6 +37,7 @@ socketio.on("user_left_chat", msg =>{
 socketio.on("public_chat", data => {
     let username = data.username;
     let text = data.text;
+    let date = data.date;
     let chat_area = document.getElementById("chat-area");
     let chat_div = document.createElement("div");
 
@@ -51,6 +52,14 @@ socketio.on("public_chat", data => {
     
     p.appendChild(b);
     p.append(text);
+
+    let small = document.createElement("small");
+    small.innerText = date;
+    small.style.color = "grey";
+    p.append(" ");
+    p.appendChild(small);
+
+
     chat_div.appendChild(p);
 
     chat_area.appendChild(chat_div);

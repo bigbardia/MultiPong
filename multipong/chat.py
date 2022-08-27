@@ -1,6 +1,6 @@
 from multipong.ext import socketio , db
 from multipong.models import PublicChat
-from multipong.utils import is_authenticated, get_current_user
+from multipong.utils import is_authenticated, get_current_user, to_datetime
 
 @socketio.on("connect")
 def chat_connection():
@@ -10,9 +10,7 @@ def chat_connection():
 
 @socketio.on("disconnect" , namespace="/")
 def chat_disconnect():
-    print("i got called * 10")
     if is_authenticated():
-        print("i am here" * 10)
         user = get_current_user()
         socketio.emit("user_left_chat" , f"{user.username} Disconnected :(" , broadcast = True)
 
@@ -27,4 +25,5 @@ def broadcast_public_chat(msg):
         socketio.emit("public_chat" , {
             "username" : user.username,
             "text"  : msg,
+            "date" : to_datetime(pc.timestamp)
         } , broadcast = True)

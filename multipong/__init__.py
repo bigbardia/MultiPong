@@ -4,7 +4,7 @@ import os
 from multipong.auth import auth
 from multipong.views import views
 from multipong.ext import db , sess , csrf , socketio
-from multipong.utils import is_authenticated
+from multipong.utils import is_authenticated , to_datetime
 
 
 load_dotenv()
@@ -36,6 +36,7 @@ def create_app():
     from multipong import chat
 
     app.jinja_env.globals.update(is_authenticated = is_authenticated)
+    app.jinja_env.globals.update(to_datetime = to_datetime)
 
     with app.app_context():
         db.create_all()
