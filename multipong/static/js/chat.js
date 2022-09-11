@@ -28,7 +28,7 @@ socketio.on("user_joined_chat" , msg =>{
 
 
 socketio.on("online_users" , count => {
-    console.log(count);
+    document.getElementById("online").innerText = `online : ${count}`;
 })
 
 
