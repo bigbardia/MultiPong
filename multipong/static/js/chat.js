@@ -1,4 +1,4 @@
-const socketio = io();
+const socketio = io({"transports" : ['websocket']});
 let USERNAME = ""
 fetch("/get_username").then(resp=>{
     resp.text().then(data=>{
