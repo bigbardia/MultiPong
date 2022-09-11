@@ -27,6 +27,10 @@ socketio.on("user_joined_chat" , msg =>{
 
 
 
+socketio.on("online_users" , count => {
+    console.log(count);
+})
+
 
 socketio.on("user_left_chat", msg =>{
     console.log(1);
