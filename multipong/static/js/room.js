@@ -1,7 +1,7 @@
 const socketio = io("/room",{"transports" : ['websocket']});
 
-const game = () => {
-
+function game() {
+    
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{

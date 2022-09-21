@@ -33,6 +33,7 @@ class Room(db.Model):
     player2_id = db.Column(db.Integer , db.ForeignKey("user._id") , nullable = True)
     active = db.Column(db.Boolean , default = False)
     game_ended = db.Column(db.Boolean , default = False)
+    game_started = db.Column(db.Boolean , default = False)
 
     def __init__(self, player1):
         self.player1 = player1
@@ -56,7 +57,6 @@ class User(db.Model):
     player1s = db.relationship("Room" , backref = "player1" , foreign_keys = [Room.player1_id])
     player2s = db.relationship("Room" , backref = "player2" , foreign_keys = [Room.player2_id])
     online = db.Column(db.Integer , default = 0)
-    game_started = db.Column(db.Boolean , default = False)
     score = db.Column(db.Integer , default = 0)
 
     def __init__(self , username , password ):

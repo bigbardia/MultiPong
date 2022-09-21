@@ -105,10 +105,11 @@ def room_disconnect():
             player = get_player(user , room)
             if not room.game_started:
                 if player == "p1":
+                    close_room(room.public_id)
                     db.session.delete(room)
                     db.session.commit()
                     socketio.emit("player1_left_before_start" , to = room.public_id , namespace="/room")
-                    close_room(room.public_id)
+                    
 
                 if player == "p2":
                     leave_room(room.public_id)
@@ -117,13 +118,13 @@ def room_disconnect():
                     socketio.emit("player2_left_before_start" , to=room.public_id , namespace="/room")
 
             elif room.game_started:
-
+                leave_room(room.public_id)
                 room.game_ended = True
-                db.session.commit()
                 user.score  -= 1
                 db.session.commit()
-                close_room()
+                
                 socketio.emit("player_left" , to= room.public_id , namespace = "/room")
+
 
 
 
@@ -149,6 +150,7 @@ def game_logic(room_id):
     
     
     socketio.emit("game_ended" , to=room.public_id , namespace = "/room")
+    close_room(room.public_id)
     db.session.delete(room)
     db.session.commit()
     
@@ -158,3 +160,6 @@ def game_logic(room_id):
 #check if they are in the room
 #check which player they are
 #send a response
+
+
+
