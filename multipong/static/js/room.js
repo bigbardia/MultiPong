@@ -5,6 +5,15 @@ document.addEventListener("DOMContentLoaded", ()=>{
     document.getElementById("url").innerText = window.location.hostname + document.getElementById("room_url").value;
 })
 
+
+function copyToClipBoard(){
+    let url = document.getElementById("url").innerText;
+    navigator.clipboard.writeText(url).then(()=>{
+        alert("copied!")
+    });
+}
+
+
 socketio.on("player_data", (data) => {
 
     for (user of data){

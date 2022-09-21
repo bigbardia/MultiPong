@@ -15,9 +15,11 @@
 {% block body %}
     <input type="hidden" id = "room_url" value="{{room_url}}">
 
-    <h1 id="url">
-        
-    </h1>
+
+    <button type="button" onclick="copyToClipBoard()">
+        <h1 id="url">
+        </h1>
+    </button>
 
     <h1 id="1">
     </h1>
@@ -25,6 +27,13 @@
     <h1 id="2">
     </h1>
 
+
+
+
+
+    <button type="button" name="start" id="start" class="start-button">
+        Start!
+    </button>
 
 
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" ></script>
