@@ -54,6 +54,7 @@ class User(db.Model):
     public_chats = db.relationship("PublicChat" , backref =  "user")
     player1s = db.relationship("Room" , backref = "player1" , foreign_keys = [Room.player1_id])
     player2s = db.relationship("Room" , backref = "player2" , foreign_keys = [Room.player2_id])
+    online = db.Column(db.Integer , default = 0)
 
     def __init__(self , username , password ):
         self.username = username

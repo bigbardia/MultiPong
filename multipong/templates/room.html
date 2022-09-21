@@ -13,49 +13,21 @@
 
 
 {% block body %}
+    <input type="hidden" id = "room_url" value="{{room_url}}">
 
-    <h2>
-        poop
-    </h2>
-    <h1>
-        url  : {{room_url}}
+    <h1 id="url">
+        
     </h1>
 
     <h1 id="1">
     </h1>
 
     <h1 id="2">
-
     </h1>
 
 
 
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" ></script>
-    <script>
-    
-        const socketio = io("/room",{"transports" : ['websocket']});
-        
-
-        socketio.on("player_data", (data) => {
-            
-
-            for (user of data){
-                let username = user["username"];
-                let player = user["player"];
-
-                document.getElementById(player[player.length-1]).innerText = `${player} : ${username}`;
-
-            }
-        })
-
-        socketio.on("player1_left_before_start" , ()=>{
-            window.location.replace("/");
-        })
-
-        socketio.on("player2_left_before_start" , ()=>{
-            document.getElementById("2").innerText ="";
-        })
-
-    </script>
+    <script src="/static/js/room.js"></script>
 
 {% endblock %}
