@@ -1,5 +1,8 @@
 const socketio = io("/room",{"transports" : ['websocket']});
 
+const game = () => {
+
+}
 
 document.addEventListener("DOMContentLoaded", ()=>{
     document.getElementById("url").innerText = window.location.hostname + document.getElementById("room_url").value;
@@ -38,4 +41,18 @@ socketio.on("player1_left_before_start" , ()=>{
 
 socketio.on("player2_left_before_start" , ()=>{
     document.getElementById("2").innerText ="";
+})
+
+
+socketio.on("start_game" , ()=>{
+    game();
+})
+
+
+socketio.on("game_ended" , ()=>{
+
+})
+
+socketio.on("player_left" , () => {
+
 })

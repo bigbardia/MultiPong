@@ -117,7 +117,14 @@ def room_disconnect():
                     socketio.emit("player2_left_before_start" , to=room.public_id , namespace="/room")
 
             elif room.game_started:
-                pass
+
+                room.game_ended = True
+                db.session.commit()
+                user.score  -= 1
+                db.session.commit()
+                close_room()
+                socketio.emit("player_left" , to= room.public_id , namespace = "/room")
+
 
 
 @socketio.on("start_game", namespace="/room")
@@ -129,13 +136,25 @@ def start_game():
             socketio.emit("start_game" , to=room.public_id)
             room.game_started = True
             db.session.commit()
+            socketio.start_background_task(target=game_logic)
 
 
-
+def game_logic(room_id):
+    p1_score = 0
+    p2_score = 0
+    while True:
+        room = Room.query.filter_by(public_id = room_id).first()
+        if room.game_ended:
+            break
+    
+    
+    socketio.emit("game_ended" , to=room.public_id , namespace = "/room")
+    db.session.delete(room)
+    db.session.commit()
+    
 
 
 #check if they are authenticated
 #check if they are in the room
 #check which player they are
 #send a response
-
