@@ -3,6 +3,10 @@ const socketio = io("/room",{"transports" : ['websocket']});
 
 document.addEventListener("DOMContentLoaded", ()=>{
     document.getElementById("url").innerText = window.location.hostname + document.getElementById("room_url").value;
+    let start_button = document.getElementById("start");
+    start_button.addEventListener("click" , ()=>{
+        socketio.emit("start_game");
+    })
 })
 
 

@@ -55,6 +55,7 @@ class User(db.Model):
     player1s = db.relationship("Room" , backref = "player1" , foreign_keys = [Room.player1_id])
     player2s = db.relationship("Room" , backref = "player2" , foreign_keys = [Room.player2_id])
     online = db.Column(db.Integer , default = 0)
+    game_started = db.Column(db.Boolean , default = False)
 
     def __init__(self , username , password ):
         self.username = username

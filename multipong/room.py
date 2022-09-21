@@ -1,4 +1,4 @@
-from flask import Blueprint , redirect , flash , session , render_template , request
+from flask import Blueprint , redirect , session , render_template
 from multipong.utils import is_authenticated
 from multipong.models import Room , User
 from multipong.ext import db , socketio
@@ -103,17 +103,35 @@ def room_disconnect():
         room = get_current_room_by_user(user)
         if room:
             player = get_player(user , room)
-            if player == "p1":
-                db.session.delete(room)
-                db.session.commit()
-                socketio.emit("player1_left_before_start" , to = room.public_id , namespace="/room")
-                close_room(room.public_id)
+            if not room.game_started:
+                if player == "p1":
+                    db.session.delete(room)
+                    db.session.commit()
+                    socketio.emit("player1_left_before_start" , to = room.public_id , namespace="/room")
+                    close_room(room.public_id)
 
-            if player == "p2":
-                leave_room(room.public_id)
-                room.player2 = None
-                db.session.commit()
-                socketio.emit("player2_left_before_start" , to=room.public_id , namespace="/room")
+                if player == "p2":
+                    leave_room(room.public_id)
+                    room.player2 = None
+                    db.session.commit()
+                    socketio.emit("player2_left_before_start" , to=room.public_id , namespace="/room")
+
+            elif room.game_started:
+                pass
+
+
+@socketio.on("start_game", namespace="/room")
+def start_game():
+    if is_authenticated():
+        user = User.query.filter_by(_id = session["_id"]).first()
+        room = get_current_room_by_user(user)
+        if room:
+            socketio.emit("start_game" , to=room.public_id)
+            room.game_started = True
+            db.session.commit()
+
+
+
 
 
 #check if they are authenticated
