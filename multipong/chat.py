@@ -5,7 +5,7 @@ from multipong.utils import is_authenticated, get_current_user, to_datetime
 online_users = 0
 
 
-@socketio.on("connect" )
+@socketio.on("connect" , namespace="/")
 def chat_connection():
     global online_users
     if is_authenticated():
@@ -15,7 +15,7 @@ def chat_connection():
         socketio.emit("online_users" , online_users , broadcast = True)
 
 
-@socketio.on("disconnect")
+@socketio.on("disconnect" , namespace="/")
 def chat_disconnect():
     global online_users
     if is_authenticated():
@@ -25,7 +25,7 @@ def chat_disconnect():
         socketio.emit("online_users" , online_users , broadcast = True)
 
 
-@socketio.on("public_chat")
+@socketio.on("public_chat" , namespace="/")
 def broadcast_public_chat(msg):
     if is_authenticated() and len(msg)>0 and msg.count(" ") != len(msg):
 

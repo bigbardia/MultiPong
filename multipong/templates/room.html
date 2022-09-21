@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+
+    <link rel="stylesheet" href="/static/css/room.css">
+
+    <title>
+        Game Room
+    </title>
+
+{% endblock %}
+
+
+{% block body %}
+
+    <h2>
+        poop
+    </h2>
+    <h1>
+
+        url  : {{room_url}}
+
+        <p id="1">
+
+        </p>
+
+        <p id="2">
+
+        </p>
+    </h1>
+
+
+
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" ></script>
+    <script>
+    
+        const socketio = io("/room",{"transports" : ['websocket']});
+        
+
+        socketio.on("player_data", (data) => {
+
+            console.log(data);
+        })
+
+        
+
+
+
+    </script>
+
+{% endblock %}
+

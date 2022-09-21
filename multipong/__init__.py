@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 from multipong.auth import auth
 from multipong.views import views
+from multipong.room import rooms
 from multipong.ext import db , sess , csrf , socketio
 from multipong.utils import is_authenticated , to_datetime
 
@@ -27,6 +28,7 @@ def create_app():
 
     app.register_blueprint(auth)
     app.register_blueprint(views)
+    app.register_blueprint(rooms)
 
 
     db.init_app(app)

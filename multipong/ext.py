@@ -6,4 +6,4 @@ from flask_socketio import SocketIO
 db = SQLAlchemy()
 sess = Session()
 csrf = CSRFProtect()
-socketio = SocketIO()
+socketio = SocketIO(logger=True)

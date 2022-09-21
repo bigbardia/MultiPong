@@ -28,10 +28,9 @@ class PublicChat(db.Model):
 class Room(db.Model):
 
     _id = db.Column(db.Integer , primary_key = True)
-    public_id = db.Column(db.String(20), default = gen_uuid)
+    public_id = db.Column(db.Text, default = gen_uuid)
     player1_id = db.Column(db.Integer , db.ForeignKey("user._id"))
     player2_id = db.Column(db.Integer , db.ForeignKey("user._id") , nullable = True)
-    active = db.Column(db.Boolean , default = True)
 
 
     def __init__(self, player1):
@@ -40,6 +39,8 @@ class Room(db.Model):
     def __repr__(self):
         return self.public_id
 
+    def get_url(self):
+        return f"/room/{self.public_id}"
 
 
 

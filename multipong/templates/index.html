@@ -64,10 +64,13 @@
 
 
     
-    <button type="submit" >
-        Create Room
-    </button>
-
+    <form method="post" action="/create_room">
+        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+        
+        <button type="submit">
+            Create Room
+        </button>
+    </form>
 
 
 
