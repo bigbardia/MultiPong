@@ -18,16 +18,14 @@
         poop
     </h2>
     <h1>
-
         url  : {{room_url}}
+    </h1>
 
-        <p id="1">
+    <h1 id="1">
+    </h1>
 
-        </p>
+    <h1 id="2">
 
-        <p id="2">
-
-        </p>
     </h1>
 
 
@@ -39,15 +37,25 @@
         
 
         socketio.on("player_data", (data) => {
+            
 
-            console.log(data);
+            for (user of data){
+                let username = user["username"];
+                let player = user["player"];
+
+                document.getElementById(player[player.length-1]).innerText = `${player} : ${username}`;
+
+            }
         })
 
-        
+        socketio.on("player1_left_before_start" , ()=>{
+            window.location.replace("/");
+        })
 
-
+        socketio.on("player2_left_before_start" , ()=>{
+            document.getElementById("2").innerText ="";
+        })
 
     </script>
 
 {% endblock %}
-

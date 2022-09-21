@@ -31,7 +31,7 @@ class Room(db.Model):
     public_id = db.Column(db.Text, default = gen_uuid)
     player1_id = db.Column(db.Integer , db.ForeignKey("user._id"))
     player2_id = db.Column(db.Integer , db.ForeignKey("user._id") , nullable = True)
-
+    active = db.Column(db.Boolean , default = False)
 
     def __init__(self, player1):
         self.player1 = player1

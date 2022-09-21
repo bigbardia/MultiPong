@@ -2,7 +2,7 @@ from flask import Blueprint , redirect , flash , session , render_template , req
 from multipong.utils import is_authenticated
 from multipong.models import Room , User
 from multipong.ext import db , socketio
-from flask_socketio import join_room , leave_room
+from flask_socketio import join_room , leave_room , close_room
 from sqlalchemy import or_
 
 
@@ -12,11 +12,16 @@ rooms = Blueprint("rooms", __name__ , template_folder="templates" , static_folde
 @rooms.route("/create_room" , methods = ["POST"])
 def create_room():
     if not is_authenticated():
-        flash("you need to have an account")
         return redirect("/")
 
-    player1 = User.query.filter_by(_id = session["_id"]).first()
-    room = Room(player1=player1)
+
+    user = User.query.filter_by(_id = session["_id"]).first()
+
+    room = get_current_room_by_user(user)
+    if room:
+        return redirect("/")
+
+    room = Room(player1 = user)
     db.session.add(room)
     db.session.commit()
     return redirect(f"/room/{room.public_id}")
@@ -32,17 +37,18 @@ def game_room(room_id):
 
     user = User.query.filter_by(_id = session["_id"]).first()
 
-    p1_count = Room.query.filter_by(player1 = user).count()
-    p2_count = Room.query.filter_by(player2 = user).count()
-    if room.player1 == user and p1_count != 1:
-        return redirect("/")
-
-    if p2_count != 0:
-        return redirect("/")
-
-    if room.player1 != user:
-        room.player2 = user
-        db.session.commit()
+    if room.player1 == user:
+        if room.active :
+            return redirect("/")
+        else:
+            room.active = True
+            db.session.commit()
+    else:
+        if Room.query.filter_by(player2 = user).count() > 0:
+            return redirect("/")
+        elif room.player1 != user:
+            room.player2 = user
+            db.session.commit()
 
     return render_template('room.html', room_url = f"/room/{room.public_id}")
 
@@ -64,7 +70,7 @@ def get_player(user , room):
 
 @socketio.on("connect", namespace="/room")
 def room_connection():
-    print("---------------")
+
     if is_authenticated():
         user = User.query.filter_by(_id = session["_id"]).first()
         room = get_current_room_by_user(user)
@@ -92,10 +98,22 @@ def room_connection():
 
 @socketio.on("disconnect" , namespace="/room")
 def room_disconnect():
-    pass
+    if is_authenticated():
+        user = User.query.filter_by(_id = session["_id"]).first()
+        room = get_current_room_by_user(user)
+        if room:
+            player = get_player(user , room)
+            if player == "p1":
+                db.session.delete(room)
+                db.session.commit()
+                socketio.emit("player1_left_before_start" , to = room.public_id , namespace="/room")
+                close_room(room.public_id)
 
-
-
+            if player == "p2":
+                leave_room(room.public_id)
+                room.player2 = None
+                db.session.commit()
+                socketio.emit("player2_left_before_start" , to=room.public_id , namespace="/room")
 
 
 #check if they are authenticated
