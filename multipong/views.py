@@ -12,3 +12,7 @@ def index():
     return render_template("index.html" , **context)
 
 
+@views.route("/pong_test_game")
+def pong_test_game():
+    return render_template("pong.html")
+

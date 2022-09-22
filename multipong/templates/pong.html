@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Pong Test</title>
+    
+
+    <style>
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            background-color: black;
+            display: block;
+            margin: 0 auto;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    
+    <canvas id="main-game" width="1700" height="900">
+    </canvas>
+
+    <script>
+
+        let canvas = document.getElementById("main-game");    
+        let ctx = canvas.getContext("2d");
+        
+
+        function getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min) ) + min;
+        }   
+
+
+        function normalizeVector(x , y) {
+            
+            let mag = Math.sqrt(x ** 2 + y ** 2);
+            x = x/mag;
+            y = y/mag;
+            x *= 15;
+            y *= 7;
+
+            
+
+            return [x , y]; 
+
+
+        }
+
+
+        class Ball {
+            constructor(x, y){
+                this.x  = x;
+                this.y = y;
+                this.l = 17;
+                this.dx = getRndInteger(5,10);
+                this.dy = getRndInteger(-5,5);
+
+
+            }
+
+
+
+            draw() {
+                ctx.beginPath();
+                ctx.rect(this.x , this.y , this.l , this.l)
+                ctx.fillStyle = "white";
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            move () {
+                this.x += this.dx;
+                this.y += this.dy;
+            }
+
+            reset() {
+                this.x = canvas.width/2;
+                this.y = canvas.height / 2;
+                this.dx = getRndInteger(5,10);
+                this.dy = getRndInteger(-5,5);
+                
+            }
+        }
+
+        class Paddle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.w = 20;
+                this.h = 100;
+                this.dy = 10;
+            }
+
+
+            draw () {
+                ctx.beginPath();
+                ctx.rect(this.x , this.y , this.w , this.h)
+                ctx.fillStyle = "white";
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            moveUp() {
+                this.y -= this.dy
+            }
+
+
+            moveDown() {
+                this.y += this.dy;
+            }
+
+
+        }
+
+
+        
+
+        let ball = new Ball(canvas.width/2 , canvas.height/2);
+        let leftPad = new Paddle(40 , canvas.height/2 - 60);
+        let rightPad = new Paddle( canvas.width - 60 , canvas.height / 2 - 60)
+
+        rMoveDown = false;
+        rMoveUp = false;
+        lMoveUp = false;
+        lMoveDown = false;
+
+
+        let restart = false
+        
+
+
+
+        
+
+        function draw() {
+            
+            
+
+            
+            //ball collision with wall
+            if (ball.x + ball.l > canvas.width || ball.x < 0) {
+                restart = true;
+                
+            }
+
+            if (ball.y + ball.l > canvas.height || ball.y -5 < 0) {
+                ball.dy *= -1
+            }
+            //--------------------------------------
+
+            if (!restart){
+
+                
+                if ( ball.x + ball.l + 5 > rightPad.x && (    (rightPad.y < ball.y && ball.y < rightPad.y + rightPad.h - ball.l) || (ball.y < rightPad.y && rightPad.y < ball.y + ball.l) || (ball.y < rightPad.y + rightPad.h && rightPad.y + rightPad.h < ball.y + ball.l))) {
+                    let rcenterx = rightPad.x + rightPad.w
+                    let rcentery = rightPad.y + rightPad.h / 2
+                    let ball_center = [ball.x + ball.l / 2 , ball.y + ball.l/2]
+                    let n_vector = normalizeVector(ball_center[0] - rcenterx , ball_center[1] - rcentery)
+                    ball.dx = n_vector[0];
+                    ball.dy = n_vector[1];
+
+                }
+
+
+
+                if ( ball.x -5  <  leftPad.x + leftPad.w && (    (leftPad.y  < ball.y && ball.y < leftPad.y + leftPad.h - ball.l) || (ball.y < leftPad.y && leftPad.y < ball.y + ball.l) || (ball.y < leftPad.y + leftPad.h && leftPad.y + leftPad.h < ball.y + ball.l))) {
+                    let lcenterx = leftPad.x
+                    let lcentery = leftPad.y + leftPad.h / 2
+                    let ball_center = [ball.x + ball.l / 2 , ball.y + ball.l/2]
+                    let n_vector = normalizeVector(ball_center[0] - lcenterx , ball_center[1] - lcentery);
+                    ball.dx = n_vector[0];
+                    ball.dy = n_vector[1];
+
+                }
+
+                //paddle moving-------
+                if (rightPad.y > 0 && rMoveUp ){            
+                    rightPad.moveUp();
+                }
+
+                if (rightPad.y + rightPad.h < canvas.height && rMoveDown) {
+                    rightPad.moveDown();
+                }
+
+                if (leftPad.y > 0 && lMoveUp) {
+                    leftPad.moveUp();
+                }
+
+                if (leftPad.y + leftPad.h < canvas.height && lMoveDown) {
+                    leftPad.moveDown()
+                }
+                //-------------------
+
+                ctx.clearRect(0,0,canvas.width , canvas.height);
+                ball.move();
+                ball.draw();
+                leftPad.draw();
+                rightPad.draw();
+            }
+            else {
+                
+                ball.reset();
+
+
+                restart = false;
+            }
+
+        }
+
+
+
+
+
+
+
+        //---------------------------------------------------------------
+        window.addEventListener("keydown" , event => {
+            if (event.code == "ArrowDown") {
+                rMoveDown = true
+            }
+
+            if (event.code == "ArrowUp") {
+                rMoveUp = true
+            }
+
+            if (event.code == "KeyW") {
+                lMoveUp = true
+            }
+
+            if (event.code == "KeyS") {
+                lMoveDown = true
+            }
+            
+        })
+
+        window.addEventListener("keyup" , event => {
+            if (event.code == "ArrowDown") {
+                rMoveDown = false;
+            }
+
+            if (event.code == "ArrowUp") {
+                rMoveUp = false;
+            }
+
+            if (event.code == "KeyW") {
+                lMoveUp = false;
+            }
+
+            if (event.code == "KeyS") {
+                lMoveDown = false;
+            }
+        })
+        //-----------------------------------------------------------------------
+        
+        setInterval(draw , 10);
+ 
+    </script>
+
+
+</body>
+</html>
