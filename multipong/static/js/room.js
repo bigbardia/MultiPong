@@ -1,6 +1,7 @@
 const socketio = io("/room",{"transports" : ['websocket']});
 
 function game() {
+    console.log("GAME!");
     
 }
 

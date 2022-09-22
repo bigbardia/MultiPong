@@ -137,7 +137,7 @@ def start_game():
             socketio.emit("start_game" , to=room.public_id)
             room.game_started = True
             db.session.commit()
-            socketio.start_background_task(target=game_logic)
+            socketio.start_background_task(target=game_logic , *room.public_id)
 
 
 def game_logic(room_id):
@@ -150,7 +150,7 @@ def game_logic(room_id):
     
     
     socketio.emit("game_ended" , to=room.public_id , namespace = "/room")
-    close_room(room.public_id)
+    close_room(room_id)
     db.session.delete(room)
     db.session.commit()
     
