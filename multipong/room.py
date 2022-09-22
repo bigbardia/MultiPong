@@ -1,4 +1,4 @@
-from flask import Blueprint , redirect , session , render_template
+from flask import Blueprint , redirect , session , render_template , current_app
 from multipong.utils import is_authenticated
 from multipong.models import Room , User
 from multipong.ext import db , socketio
@@ -98,18 +98,23 @@ def room_connection():
 
 @socketio.on("disconnect" , namespace="/room")
 def room_disconnect():
+
+    print("i am in the disconnect EVENT!!!!")
+
+
     if is_authenticated():
         user = User.query.filter_by(_id = session["_id"]).first()
         room = get_current_room_by_user(user)
         if room:
+            print("i am in the roommmm!!!")
             player = get_player(user , room)
             if not room.game_started:
                 if player == "p1":
+                    socketio.emit("player1_left_before_start" , to = room.public_id , namespace="/room")
                     close_room(room.public_id)
                     db.session.delete(room)
                     db.session.commit()
-                    socketio.emit("player1_left_before_start" , to = room.public_id , namespace="/room")
-                    
+
 
                 if player == "p2":
                     leave_room(room.public_id)
@@ -118,6 +123,7 @@ def room_disconnect():
                     socketio.emit("player2_left_before_start" , to=room.public_id , namespace="/room")
 
             elif room.game_started:
+                print("i am here!!!!!!")
                 leave_room(room.public_id)
                 room.game_ended = True
                 user.score  -= 1
@@ -133,26 +139,32 @@ def start_game():
     if is_authenticated():
         user = User.query.filter_by(_id = session["_id"]).first()
         room = get_current_room_by_user(user)
-        if room:
+        if room and get_player(user , room)=="p1" and room.player2:
             socketio.emit("start_game" , to=room.public_id)
             room.game_started = True
             db.session.commit()
-            socketio.start_background_task(target=game_logic , *room.public_id)
+            socketio.start_background_task(game_logic, current_app._get_current_object() , room.public_id)
 
 
-def game_logic(room_id):
-    p1_score = 0
-    p2_score = 0
-    while True:
-        room = Room.query.filter_by(public_id = room_id).first()
-        if room.game_ended:
-            break
-    
-    
-    socketio.emit("game_ended" , to=room.public_id , namespace = "/room")
-    close_room(room_id)
-    db.session.delete(room)
-    db.session.commit()
+def game_logic(app , room_id):
+
+    with app.app_context():
+        print("i am in the app context")
+        p1_score = 0
+        p2_score = 0
+        while True:
+            
+            room = Room.query.filter_by(public_id = room_id).first()
+            if room.game_ended:
+                break
+        
+        
+        socketio.emit("game_ended" , to=room.public_id , namespace = "/room")
+        close_room(room_id)
+
+        
+        db.session.delete(room)
+        db.session.commit()
     
 
 
