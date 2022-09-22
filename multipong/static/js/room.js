@@ -2,7 +2,7 @@ const socketio = io("/room",{"transports" : ['websocket']});
 
 function game() {
     console.log("GAME!");
-    
+
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -51,9 +51,10 @@ socketio.on("start_game" , ()=>{
 
 
 socketio.on("game_ended" , ()=>{
-
+    
 })
 
 socketio.on("player_left" , () => {
-
+    window.location.replace("/");
 })
+

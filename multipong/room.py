@@ -98,15 +98,16 @@ def room_connection():
 
 @socketio.on("disconnect" , namespace="/room")
 def room_disconnect():
-
+    print("---" * 50)
     print("i am in the disconnect EVENT!!!!")
+    print("---" * 100)
 
 
     if is_authenticated():
         user = User.query.filter_by(_id = session["_id"]).first()
         room = get_current_room_by_user(user)
         if room:
-            print("i am in the roommmm!!!")
+
             player = get_player(user , room)
             if not room.game_started:
                 if player == "p1":
@@ -123,14 +124,14 @@ def room_disconnect():
                     socketio.emit("player2_left_before_start" , to=room.public_id , namespace="/room")
 
             elif room.game_started:
-                print("i am here!!!!!!")
+
                 leave_room(room.public_id)
                 room.game_ended = True
+                db.session.commit()
                 user.score  -= 1
                 db.session.commit()
                 
                 socketio.emit("player_left" , to= room.public_id , namespace = "/room")
-
 
 
 
@@ -139,7 +140,7 @@ def start_game():
     if is_authenticated():
         user = User.query.filter_by(_id = session["_id"]).first()
         room = get_current_room_by_user(user)
-        if room and get_player(user , room)=="p1" and room.player2:
+        if room and get_player(user , room)=="p1" and room.player2 and not room.game_started:
             socketio.emit("start_game" , to=room.public_id)
             room.game_started = True
             db.session.commit()
@@ -148,24 +149,36 @@ def start_game():
 
 def game_logic(app , room_id):
 
-    with app.app_context():
-        print("i am in the app context")
-        p1_score = 0
-        p2_score = 0
-        while True:
-            
+
+    print("i am in the app context")
+    p1_score = 0
+    p2_score = 0
+    while True:
+    
+        with app.app_context():
             room = Room.query.filter_by(public_id = room_id).first()
             if room.game_ended:
                 break
         
-        
-        socketio.emit("game_ended" , to=room.public_id , namespace = "/room")
-        close_room(room_id)
 
+        #game logic here
+
+        
+
+        
+
+
+            
+        socketio.sleep(0.01) # you need to add this so gevent can switch contexts. like await asyncio.sleep(0)
+    
+
+    with app.app_context():
+        socketio.emit("game_ended" , to=room.public_id , namespace = "/room")
+        close_room(room_id , "/room")
         
         db.session.delete(room)
         db.session.commit()
-    
+        print("bye ------- thread")
 
 
 #check if they are authenticated
