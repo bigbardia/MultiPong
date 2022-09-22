@@ -1,5 +1,5 @@
 from flask import Blueprint , redirect , session , render_template , current_app
-from multipong.utils import is_authenticated
+from multipong.utils import is_authenticated , get_current_user
 from multipong.models import Room , User
 from multipong.ext import db , socketio
 from flask_socketio import join_room , leave_room , close_room
@@ -15,7 +15,7 @@ def create_room():
         return redirect("/")
 
 
-    user = User.query.filter_by(_id = session["_id"]).first()
+    user = get_current_user()
 
     room = get_current_room_by_user(user)
     if room:
@@ -35,7 +35,7 @@ def game_room(room_id):
         return redirect("/")
 
 
-    user = User.query.filter_by(_id = session["_id"]).first()
+    user = get_current_user()
 
     if room.player1 == user:
         if room.active :
@@ -72,7 +72,7 @@ def get_player(user , room):
 def room_connection():
 
     if is_authenticated():
-        user = User.query.filter_by(_id = session["_id"]).first()
+        user = get_current_user()
         room = get_current_room_by_user(user)
         if room:
             
@@ -104,7 +104,7 @@ def room_disconnect():
 
 
     if is_authenticated():
-        user = User.query.filter_by(_id = session["_id"]).first()
+        user = get_current_user()
         room = get_current_room_by_user(user)
         if room:
 
@@ -138,7 +138,7 @@ def room_disconnect():
 @socketio.on("start_game", namespace="/room")
 def start_game():
     if is_authenticated():
-        user = User.query.filter_by(_id = session["_id"]).first()
+        user = get_current_user()
         room = get_current_room_by_user(user)
         if room and get_player(user , room)=="p1" and room.player2 and not room.game_started:
             socketio.emit("start_game" , to=room.public_id)
@@ -163,7 +163,7 @@ def game_logic(app , room_id):
 
         #game logic here
 
-        
+
 
         
 
@@ -178,7 +178,6 @@ def game_logic(app , room_id):
         
         db.session.delete(room)
         db.session.commit()
-        print("bye ------- thread")
 
 
 #check if they are authenticated
